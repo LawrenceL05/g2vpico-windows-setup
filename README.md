@@ -2,7 +2,7 @@
 
 A practical lab guide and troubleshooting record for the official [G2V Optics G2VPico Python library](https://github.com/g2v-optics/G2VPico). This is a companion guide, not an official G2V release or a fork of the library.
 
-## Current status — September 25, 2026
+## Current status — September 29, 2026
 
 | Check | Observed result |
 | --- | --- |
@@ -12,12 +12,13 @@ A practical lab guide and troubleshooting record for the official [G2V Optics G2
 | Git-based installation | Not verified; successful ZIP installation bypassed Git |
 | Notebook environment | Earlier notebook reported `ModuleNotFoundError`; its kernel still needs verification |
 | Ethernet routing | A competing Tailscale link-local route was found; a temporary device-specific Ethernet route was added and verified |
-| Device connection | Still timed out after correcting the route; no Ethernet neighbor entry was resolved for the supplied device address |
+| Ethernet TCP connection | User confirmed `TcpTestSucceeded: True` for `169.254.84.67:50000` on September 29 |
+| Python API read | Channel-count read with the confirmed Ethernet address still awaits verification |
 | Illumination | No commands to change light output were executed in these tests |
 
-**Installation succeeded. Communication with the physical Pico remains unresolved.** The device address supplied during troubleshooting came from a saved notebook and has not been confirmed on the current control-box interface. The routing conflict was real, but fixing it did not establish communication. There is no evidence yet that reinstalling Miniconda is necessary.
+**Installation and the Ethernet TCP port test succeeded.** The control box now confirms `169.254.84.67/16` on `eth0`. An earlier photo was misread as `169.254.94.67`, which sent subsequent Ethernet tests to the wrong address. The user confirmed a successful port-50000 test after correcting the address. This confirms TCP reachability, but a successful Python API response has not yet been reported.
 
-Actual device IDs, campus addresses, usernames, and screenshots are omitted. Substitute your current device information in the commands below.
+The device-specific example below contains the confirmed Ethernet address and Pico ID. Verify the current address on the control box if the network setup changes.
 
 ## 1. Prepare the equipment
 
@@ -133,7 +134,24 @@ Channel count: ...
 Available channels: [...]
 ```
 
-Our test instead timed out inside the library's socket connection. This occurred before an API response or channel read, so it does not establish whether the ID is correct or the API entitlement is enabled.
+Earlier tests timed out before an API response. On September 29, the user reported that the TCP test passed with the corrected Ethernet address. API initialization and channel reads remain unverified.
+
+For this Pico, run in Windows PowerShell:
+
+```powershell
+Test-NetConnection 169.254.84.67 -Port 50000
+```
+
+Run the following in a Python notebook or save and execute it as a Python file; do not paste Python directly into PowerShell:
+
+```python
+from g2vpico import G2VPico
+
+pico = G2VPico("169.254.84.67", "0000000031a0525e")
+print("Channels:", pico.channel_count)
+```
+
+This example reads channel information without changing illumination. See [pico_connection_example.py](pico_connection_example.py).
 
 If it times out, verify the current device IP on the control box, power, cable endpoint, wired interface, and route. `arp -a` can help check whether a neighbor was resolved. A failed ping alone does not prove a device is offline. If TCP succeeds but API initialization fails, investigate the exact API error, ID, device software, and entitlement.
 
@@ -160,7 +178,7 @@ Remote connections still timed out, including a user-run test outside the assist
 
 ## Next step
 
-Confirm the Pico's current wired address directly on the control box, then repeat the port and read-only API tests. Reinstalling Miniconda will not resolve an unreachable Ethernet destination.
+Run the read-only Python example using `169.254.84.67` and confirm that it prints a channel count. If it fails, preserve the exact traceback; TCP reachability has now passed, so the next diagnosis depends on the Python/API error.
 
 ## Sources
 

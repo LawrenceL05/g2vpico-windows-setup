@@ -89,6 +89,31 @@ To make the guide's environment available as a kernel:
 
 Select **Python (G2VPico Lab)** in the notebook's kernel selector, restart the kernel, and verify the import. This kernel-registration procedure is guidance; it was not performed during our session.
 
+## Run the connection test in G2Vtest0.ipynb
+
+If the notebook reports `ModuleNotFoundError: No module named 'g2vpico'`, the library is not installed in that notebook's Python environment. Delete the `!pip install git` line—it will not install the library.
+
+**1. Replace the entire selected cell with this and press Shift + Enter:**
+
+```python
+%pip install https://github.com/g2v-optics/G2VPico/archive/refs/heads/main.zip
+```
+
+**2. When installation finishes successfully, click “Restart” at the top** to restart the notebook kernel.
+
+**3. Replace that cell with the following and press Shift + Enter:**
+
+```python
+import socket
+from g2vpico import G2VPico
+
+socket.setdefaulttimeout(10)
+pico = G2VPico("169.254.84.67", "0000000031a0525e")
+print("Channels:", pico.channel_count)
+```
+
+Run only this cell, not **Run All**. The existing notebook includes commands that change LED settings. If installation fails in step 1, capture that error before proceeding.
+
 ## 4. Check Ethernet addressing and routes
 
 ```powershell

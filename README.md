@@ -121,7 +121,20 @@ Once successful, press **Ctrl + S** to save the notebook. Reuse this `pico` obje
 
 The same connection code is available in [pico_connection_example.py](pico_connection_example.py).
 
-## 7. Handle the original notebook cells
+## 7. Read the current Pico status
+
+After the connection cell prints `Channels: 32`, add a new code cell directly below it:
+
+```python
+print("Light on:", pico.is_fixture_on())
+print("Global intensity:", pico.get_global_intensity())
+print("Channels:", pico.channel_list)
+print("Spectrum:", pico.get_spectrum())
+```
+
+Press **Shift + Enter** to run only this cell. It reuses the connected `pico` object and reads the fixture state, global intensity, available channels, and current spectrum. It does not issue a command to turn the fixture on or change a channel value.
+
+## 8. Handle the original notebook cells
 
 The old notebook includes:
 

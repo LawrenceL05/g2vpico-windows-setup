@@ -173,6 +173,6 @@ If Windows reports `DestinationHostUnreachable`, first verify the address carefu
 
 The successful test confirms a channel-count read; it does not validate LED scanning, spectrum control, or a full experiment. The notebook's yellow editor underlines did not prevent the successful run shown by the user.
 
-Earlier installation and network investigations are preserved in [the historical troubleshooting record](docs/previous-troubleshooting.md). Those older unresolved-status statements are superseded by the successful test above.
+Earlier installation and network investigations remain available in this repository's Git history. Their unresolved-status statements are superseded by the successful test above.
 
 Sources: [official G2VPico documentation](https://github.com/g2v-optics/G2VPico) and [API implementation](https://github.com/g2v-optics/G2VPico/blob/main/g2vpico/MainClass.py), together with the user's control-box, Windows, and notebook screenshots.
